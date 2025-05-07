@@ -49,7 +49,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($tweets as $tweet)
+                                {{-- @foreach ($tweets as $tweet)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $tweet->tweet_id }}</td>
@@ -57,7 +57,7 @@
                                         <td>{{ $tweet->username }}</td>
                                         <td>{{ $tweet->text }}</td>
                                     </tr>
-                                @endforeach
+                                @endforeach --}}
                             </tbody>
                         </table>
                     </div>
@@ -68,7 +68,7 @@
 @endsection
 
 
-@section('script')
+{{-- @section('script')
     <script>
         $(document).ready(function() {
             $('#myTable').DataTable();
@@ -96,4 +96,4 @@
             });
         });
     </script>
-@endsection
+@endsection --}}

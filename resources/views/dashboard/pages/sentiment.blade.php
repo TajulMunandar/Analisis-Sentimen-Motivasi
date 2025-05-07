@@ -49,7 +49,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($sentiments as $sentiment)
+                                {{-- @foreach ($sentiments as $sentiment)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $sentiment->Tweet->text }}</td>
@@ -67,7 +67,7 @@
                                         </td>
                                         <td>{{ $sentiment->confidence }}</td>
                                     </tr>
-                                @endforeach
+                                @endforeach --}}
                             </tbody>
                         </table>
                     </div>
@@ -77,7 +77,7 @@
     </div>
 @endsection
 
-
+{{--
 @section('script')
     <script>
         $(document).ready(function() {
@@ -132,4 +132,4 @@
             });
         });
     </script>
-@endsection
+@endsection --}}
