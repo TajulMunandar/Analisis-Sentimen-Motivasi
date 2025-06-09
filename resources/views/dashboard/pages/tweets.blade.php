@@ -75,11 +75,20 @@
 
             $("#scrape").click(function() {
                 let button = $(this);
+                let keyword = $("#keyword").val().trim();
+                if (!keyword) {
+                    alert("Please enter a keyword before scraping!");
+                    return;
+                }
                 button.prop("disabled", true).html('<i class="fa fa-spinner fa-spin"></i> Scraping...');
 
                 $.ajax({
                     url: "http://127.0.0.1:5000/scrapping", // Ganti dengan URL Flask jika berbeda
-                    type: "GET",
+                    type: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify({
+                        keyword: keyword
+                    }),
                     success: function(response) {
                         alert("Scraping berhasil!");
                         location.reload(); // Reload halaman untuk menampilkan data terbaru

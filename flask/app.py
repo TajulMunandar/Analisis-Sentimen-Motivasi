@@ -1,7 +1,7 @@
 import subprocess
 import pandas as pd
 import requests
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 import os
 import time
 from flask_cors import CORS
@@ -191,7 +191,15 @@ def preprocess_tweets():
         # 🔹 Preprocessing
         processed_tweets = []
         for tweet in tweets:
-            clean_text = preprocess_text(tweet["text"])
+            # Lewati jika tidak ada teks
+            raw_text = tweet.get("text")
+            if not raw_text or not raw_text.strip():
+                continue
+
+            clean_text = preprocess_text(raw_text)
+            if not clean_text or not clean_text.strip():
+                continue  # Lewati jika hasil preprocessing kosong
+
             tokenized = word_tokenize(clean_text)
             feature_vector = " ".join(tokenized)
 
@@ -204,10 +212,12 @@ def preprocess_tweets():
                 }
             )
 
-        save_response = requests.post(
-            LARAVEL_PREPROCESS_API, json={"preprocessed_tweets": processed_tweets}
-        )
-        save_response.raise_for_status()
+        # Kirim ke Laravel jika ada hasil
+        if processed_tweets:
+            save_response = requests.post(
+                LARAVEL_PREPROCESS_API, json={"preprocessed_tweets": processed_tweets}
+            )
+            save_response.raise_for_status()
 
         return jsonify({"preprocessed_tweets": processed_tweets})
 
@@ -215,9 +225,15 @@ def preprocess_tweets():
         return jsonify({"error": str(e)}), 500
 
 
-@app.route("/scrapping", methods=["GET"])
+@app.route("/scrapping", methods=["post"])
 def scrapping():
     try:
+        data = request.get_json()
+        if not data or "keyword" not in data:
+            return jsonify({"error": "Keyword is required"}), 400
+
+        search_keyword = data.get("keyword")
+
         # 🔹 1️⃣ Scraping data menggunakan tweet-harvest
         command = [
             NPX_PATH,
@@ -225,7 +241,7 @@ def scrapping():
             "-o",
             FILENAME.replace("\\", "/"),  # Pastikan format path benar
             "-s",
-            SEARCH_KEYWORD,
+            search_keyword,
             "--tab",
             "LATEST",
             "-l",
