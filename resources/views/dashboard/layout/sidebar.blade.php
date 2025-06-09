@@ -17,6 +17,7 @@
                      <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
                      <span class="hide-menu">Fitur Utama</span>
                  </li>
+
                  <li class="sidebar-item {{ Request::is('/dashboard') ? 'active' : '' }}">
                      <a class="sidebar-link " href="/dashboard" aria-expanded="false">
                          <span>
@@ -24,7 +25,6 @@
                          </span>
                          <span class="hide-menu">Dashboard</span>
                      </a>
-
                  </li>
 
                  <li class="sidebar-item {{ Request::is('/dashboard/tweets') ? 'active' : '' }}">
@@ -43,6 +43,7 @@
                          <span class="hide-menu">Preprocessing</span>
                      </a>
                  </li>
+
                  <li class="sidebar-item {{ Request::is('/dashboard/sentiment') ? 'active' : '' }}">
                      <a class="sidebar-link" href="/dashboard/sentiment" aria-expanded="false">
                          <span>
@@ -51,26 +52,28 @@
                          <span class="hide-menu">Sentiment</span>
                      </a>
                  </li>
-                 <li class="nav-small-cap">
-                     <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
-                     <span class="hide-menu">Data Master</span>
-                 </li>
-                 <li class="sidebar-item {{ Request::is('/dashboard/lexicon') ? 'active' : '' }}">
-                     <a class="sidebar-link" href="/dashboard/lexicon" aria-expanded="false">
-                         <span>
-                             <i class="ti ti-server"></i>
-                         </span>
-                         <span class="hide-menu">Lexicon Datas</span>
-                     </a>
-                 </li>
-                 <li class="sidebar-item {{ Request::is('/dashboard/users') ? 'active' : '' }}">
-                     <a class="sidebar-link" href="/dashboard/users" aria-expanded="false">
-                         <span>
-                             <i class="ti ti-user-plus"></i>
-                         </span>
-                         <span class="hide-menu">Users</span>
-                     </a>
-                 </li>
+                 @if (auth()->user()->role == 1)
+                     <li class="nav-small-cap">
+                         <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+                         <span class="hide-menu">Data Master</span>
+                     </li>
+                     <li class="sidebar-item {{ Request::is('/dashboard/lexicon') ? 'active' : '' }}">
+                         <a class="sidebar-link" href="/dashboard/lexicon" aria-expanded="false">
+                             <span>
+                                 <i class="ti ti-server"></i>
+                             </span>
+                             <span class="hide-menu">Lexicon Datas</span>
+                         </a>
+                     </li>
+                     <li class="sidebar-item {{ Request::is('/dashboard/users') ? 'active' : '' }}">
+                         <a class="sidebar-link" href="/dashboard/users" aria-expanded="false">
+                             <span>
+                                 <i class="ti ti-user-plus"></i>
+                             </span>
+                             <span class="hide-menu">Users</span>
+                         </a>
+                     </li>
+                 @endif
 
              </ul>
          </nav>

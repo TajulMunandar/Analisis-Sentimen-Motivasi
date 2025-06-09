@@ -25,7 +25,7 @@ CORS(app)
 BASE_DIR = ""
 TWEETS_DIR = os.path.join(BASE_DIR)  # Direktori penyimpanan file
 FILENAME = os.path.join(TWEETS_DIR, "motivasi.csv")  # Path lengkap file CSV
-SEARCH_KEYWORD = "#motivasihariini lang:id"
+SEARCH_KEYWORD = "#kata-katahariini lang:id"
 LIMIT = 100
 TWITTER_AUTH_TOKEN = "ae46e8064e6634509e8940450b57e1966cd25f18"
 LARAVEL_API_URL = "http://127.0.0.1:8000/api/scrape"  # Sesuaikan dengan API Laravel
@@ -257,15 +257,32 @@ def scrapping():
             + FILENAME
         )
 
+        df = df.fillna("")
+
         # 🔹 5️⃣ Persiapkan data untuk dikirim ke database
         tweets = []
         for _, row in df.iterrows():
+
             tweet = {
-                "tweet_id": str(row.get("id_str", "")),  # ID tweet
-                "user_id": str(row.get("user_id_str", "")),  # ID pengguna
-                "username": row.get("username", ""),  # Nama pengguna
-                "text": row.get("full_text", ""),  # Isi tweet
-                "sentimen": None,  # Bisa ditambahkan analisis sentimen nanti
+                "tweet_id": (
+                    str(row.get("id_str", ""))
+                    if pd.notna(row.get("id_str", ""))
+                    else ""
+                ),
+                "user_id": (
+                    str(row.get("user_id_str", ""))
+                    if pd.notna(row.get("user_id_str", ""))
+                    else ""
+                ),
+                "username": (
+                    row.get("username", "") if pd.notna(row.get("username", "")) else ""
+                ),
+                "text": (
+                    row.get("full_text", "")
+                    if pd.notna(row.get("full_text", ""))
+                    else ""
+                ),
+                "sentimen": None,
             }
             tweets.append(tweet)
 

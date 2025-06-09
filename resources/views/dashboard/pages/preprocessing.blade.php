@@ -34,7 +34,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                {{-- @foreach ($processes as $process)
+                                @foreach ($processes as $process)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $process->Tweet->text }}</td>
@@ -42,7 +42,7 @@
                                         <td>{{ $process->tokenized }}</td>
                                         <td>{{ $process->feature_vector }}</td>
                                     </tr>
-                                @endforeach --}}
+                                @endforeach
                             </tbody>
                         </table>
                     </div>
@@ -52,7 +52,7 @@
     </div>
 @endsection
 
-{{--
+
 @section('script')
     <script>
         $(document).ready(function() {
@@ -77,7 +77,7 @@
                             text: 'Preprocessing selesai!',
                         }).then(() => {
                             location
-                        .reload(); // Refresh halaman setelah preprocessing selesai
+                                .reload(); // Refresh halaman setelah preprocessing selesai
                         });
                     },
                     error: function(xhr) {
@@ -91,4 +91,4 @@
             });
         });
     </script>
-@endsection --}}
+@endsection
