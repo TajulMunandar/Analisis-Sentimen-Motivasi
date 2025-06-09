@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\LandingController;
 use App\Http\Controllers\LexiconController;
 use App\Http\Controllers\ModelController;
 use App\Http\Controllers\PreprocessingController;
@@ -17,7 +18,7 @@ Route::group(['middleware' => 'guest'], function () {
     Route::post('/login', [AuthController::class, 'authenticate'])->name('sign-in');
 });
 
-Route::redirect('/', '/login');
+Route::get('/', [LandingController::class, 'index']);
 
 Route::prefix('/dashboard')->middleware('auth')->group(function () {
     Route::get('/', [DashboardController::class, 'index']);
