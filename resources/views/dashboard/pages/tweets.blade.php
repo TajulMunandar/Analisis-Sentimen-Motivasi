@@ -44,7 +44,7 @@
                                     <th>NO</th>
                                     <th>TWEET ID</th>
                                     <th>USER ID</th>
-                                    <th>USERNAME</th>
+
                                     <th>TEXT</th>
                                 </tr>
                             </thead>
@@ -54,7 +54,7 @@
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $tweet->tweet_id }}</td>
                                         <td>{{ $tweet->user_id }}</td>
-                                        <td>{{ $tweet->username }}</td>
+
                                         <td>{{ $tweet->text }}</td>
                                     </tr>
                                 @endforeach

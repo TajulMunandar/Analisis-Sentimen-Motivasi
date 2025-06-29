@@ -12,7 +12,7 @@ class TweetsController extends Controller
      */
     public function index()
     {
-        $tweets = Tweets::all();
+        $tweets = Tweets::latest()->get();
         return view('dashboard.pages.tweets')->with(compact('tweets'));
     }
 
