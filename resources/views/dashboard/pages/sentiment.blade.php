@@ -18,20 +18,22 @@
 
     <button class="btn btn-info" id="analize"><i class="fa-regular fa-plus me-2"></i>Analize</button>
 
-    <div class="row mt-3">
-        <div class="col">
+    <div class="card mt-3">
+        <div class="card-body">
             <p><b>Accuracy:</b> <span id="accuracy">-</span></p>
-        </div>
-        <div class="col">
-            <p><b>F1 Score:</b> <span id="f1-score">-</span></p>
+            <div class="row">
+                <div class="col">
+                    <p><b>Confusion Matrix:</b></p>
+                    <div id="confusion-matrix"></div>
+                </div>
+                <div class="col">
+                    <p><b>Classification Report:</b></p>
+                    <div id="classification-report"></div>
+                </div>
+            </div>
         </div>
     </div>
-    <div class="row mt-3">
-        <div class="col">
-            <p><b>Confusion Matrix:</b></p>
-            <div id="confusion-matrix"></div>
-        </div>
-    </div>
+
 
     <div class="row ">
         <div class="col-12">
@@ -45,7 +47,6 @@
                                     <th>TEXT TWITTER</th>
                                     <th>TEXT PREPROCESSING</th>
                                     <th>SENTIMENT</th>
-                                    <th>CONFIDENCE</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -65,7 +66,6 @@
                                                 <span class="badge bg-secondary">Tidak Diketahui</span>
                                             @endif
                                         </td>
-                                        <td>{{ $sentiment->confidence }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -104,22 +104,65 @@
                         });
 
                         // Update Accuracy & F1 Score
-                        $("#accuracy").text(response.evaluation.accuracy.toFixed(4));
-                        $("#f1-score").text(response.evaluation.f1_score.toFixed(4));
+                        $("#accuracy").text((response.evaluation.accuracy * 100).toFixed(2) +
+                            "%");
 
                         // Generate Confusion Matrix Table
-                        let confMatrixHtml = "<table class='table table-bordered'><tr>";
-                        response.evaluation.confusion_matrix.forEach(row => {
-                            confMatrixHtml += "<tr>";
+                        let labels = ['Positif', 'Netral',
+                            'Negatif'
+                        ]; // urut sesuai label_encoder.classes_
+                        let confMatrixHtml = "<table class='table table-bordered table-sm'>";
+                        confMatrixHtml += "<thead><tr><th></th>";
+
+                        labels.forEach(label => {
+                            confMatrixHtml += `<th>Pred: ${label}</th>`;
+                        });
+                        confMatrixHtml += "</tr></thead><tbody>";
+
+                        response.evaluation.confusion_matrix.forEach((row, i) => {
+                            confMatrixHtml += `<tr><th>Actual: ${labels[i]}</th>`;
                             row.forEach(cell => {
                                 confMatrixHtml += `<td>${cell}</td>`;
                             });
                             confMatrixHtml += "</tr>";
                         });
-                        confMatrixHtml += "</table>";
+
+                        confMatrixHtml += "</tbody></table>";
 
                         // Masukkan ke dalam div confusion-matrix
                         $("#confusion-matrix").html(confMatrixHtml);
+                        let reportHtml = `
+    <table class="table table-bordered table-sm">
+        <thead>
+            <tr>
+                <th>Label</th>
+                <th>Precision</th>
+                <th>Recall</th>
+                <th>F1-Score</th>
+
+            </tr>
+        </thead>
+        <tbody>
+`;
+
+                        let report = response.evaluation.report;
+                        for (let label in report) {
+                            if (['accuracy', 'macro avg', 'weighted avg'].includes(label))
+                                continue; // Skip summary
+
+                            reportHtml += `
+        <tr>
+            <td>${label}</td>
+            <td>${(report[label].precision * 100).toFixed(2)}%</td>
+<td>${(report[label].recall * 100).toFixed(2)}%</td>
+<td>${(report[label]["f1-score"] * 100).toFixed(2)}%</td>
+
+        </tr>
+    `;
+                        }
+
+                        reportHtml += `</tbody></table>`;
+                        $("#classification-report").html(reportHtml);
                     },
                     error: function(xhr) {
                         Swal.fire({

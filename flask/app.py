@@ -16,6 +16,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import LabelEncoder
 from sklearn.metrics import confusion_matrix, accuracy_score, f1_score
+from sklearn.metrics import classification_report
 
 app = Flask(__name__)
 
@@ -114,6 +115,12 @@ def analyze_sentiment_svm():
         accuracy = accuracy_score(y_test, y_pred)
         f1 = f1_score(y_test, y_pred, average="weighted")
 
+        target_names = label_encoder.classes_
+
+        report = classification_report(
+            y_test, y_pred, target_names=target_names, output_dict=True
+        )
+
         print("Confusion Matrix:\n", conf_matrix)
         print("Accuracy:", accuracy)
         print("F1 Score:", f1)
@@ -154,6 +161,8 @@ def analyze_sentiment_svm():
                     "confusion_matrix": conf_matrix.tolist(),
                     "accuracy": accuracy,
                     "f1_score": f1,
+                    "report": report,
+                    "labels": list(target_names)
                 },
             }
         )
