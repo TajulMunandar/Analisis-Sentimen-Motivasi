@@ -36,7 +36,7 @@
                             <h5 class="card-title mb-2 fw-semibold">Sentiment</h5>
                             <div class="row align-items-center">
                                 <div class="col-8">
-                                    <h2 class="fw-semibold mb-3">36</h2>
+                                    <h2 class="fw-semibold mb-3">{{ $sentimen }}</h2>
                                     <div class="d-flex align-items-center">
                                         <div class="me-4">
                                             <span class="round-8 bg-success rounded-circle me-2 d-inline-block"></span>
@@ -64,4 +64,60 @@
             </div>
         </div>
     </div>
+@endsection
+@section('script')
+    <script>
+        $(function() {
+            var sentimentData = {
+                series: [{{ $positive }}, {{ $neutral }}, {{ $negative }}],
+                labels: ["Positive", "Neutral", "Negative"],
+                colors: ["#00c292", "#ffb22b", "#e46a76"]
+            };
+
+            var breakup = {
+                series: sentimentData.series,
+                labels: sentimentData.labels,
+                chart: {
+                    width: 180,
+                    type: "donut",
+                    fontFamily: "Plus Jakarta Sans', sans-serif",
+                    foreColor: "#adb0bb",
+                },
+                plotOptions: {
+                    pie: {
+                        startAngle: 0,
+                        endAngle: 360,
+                        donut: {
+                            size: '75%',
+                        },
+                    },
+                },
+                stroke: {
+                    show: false,
+                },
+                dataLabels: {
+                    enabled: false,
+                },
+                legend: {
+                    show: false,
+                },
+                colors: sentimentData.colors, // pakai dari variable
+                responsive: [{
+                    breakpoint: 991,
+                    options: {
+                        chart: {
+                            width: 150,
+                        },
+                    },
+                }],
+                tooltip: {
+                    theme: "dark",
+                    fillSeriesColor: false,
+                },
+            };
+
+            var chart = new ApexCharts(document.querySelector("#breakup"), breakup);
+            chart.render();
+        });
+    </script>
 @endsection
